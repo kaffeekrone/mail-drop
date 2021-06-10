@@ -1,0 +1,13 @@
+{
+  "mail": {
+    "plainTextContent": "somePlainText",
+    "subject": "Gurkenfeld",
+    "mailAttachments": []
+  },
+  "recipients": [
+    "huhu@bla.de"
+  ],
+  "from": "from@funny.de",
+  "cc": [],
+  "bcc": []
+}
