@@ -2,10 +2,12 @@ package de.kaffeekrone.maildrop.conf;
 
 import de.kaffeekrone.maildrop.MailDropConfiguration;
 import de.kaffeekrone.maildrop.Receiver;
-import org.springframework.amqp.core.*;
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.DirectExchange;
+import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
-import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,18 +17,6 @@ import java.util.concurrent.TimeUnit;
 
 @Configuration
 public class RabbitMQConfiguration {
-
-//    private static final String queueName = "mail-drop";
-//    private static final String exchangeName = "mail-drop";
-//    private static final String routingKey = "mail-drop";
-
-//    private static final String retryQueueName = "retry-mail-drop";
-//    private static final String retryExchangeName = "retry-mail-drop";
-//    private static final String retryRoutingKey = "retry-mail-drop";
-
-//    private static final String callbackExchange = "mail-drop-result";
-//    private static final String callbackQueue = "mail-drop-result";
-//    private static final String callbackRoutingKey = "mail-drop-result";
 
     @Bean("mailExchange")
     DirectExchange mailDropExchange(MailDropConfiguration mailDropConfiguration) {
@@ -39,7 +29,7 @@ public class RabbitMQConfiguration {
     }
 
     @Bean
-    Binding binding(MailDropConfiguration mailDropConfiguration,  @Qualifier("mailQueue") Queue queue, @Qualifier("mailExchange") DirectExchange directExchange) {
+    Binding binding(MailDropConfiguration mailDropConfiguration, @Qualifier("mailQueue") Queue queue, @Qualifier("mailExchange") DirectExchange directExchange) {
         return BindingBuilder.bind(queue).to(directExchange).with(mailDropConfiguration.getRoutingKey());
     }
 
@@ -62,7 +52,7 @@ public class RabbitMQConfiguration {
     }
 
 
-//    callback stuff
+    //    callback stuff
     @Bean("callbackExchange")
     DirectExchange callbackExchange(MailDropConfiguration mailDropConfiguration) {
         return new DirectExchange(mailDropConfiguration.getCallbackExchange(), true, false);
