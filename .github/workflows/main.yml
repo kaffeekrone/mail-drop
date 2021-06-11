@@ -23,7 +23,7 @@ jobs:
         run: echo "BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/}) >> $GITHUB_ENV"
       - name: Get branch name
         #run: echo 'The branch name is' $BRANCH_NAME
-        run: echo 'The branch name is' "${{ env.BRANCH_NAME }}"
+        run: echo "${{ env.BRANCH_NAME }}" # This will output 'yellow'
       #- name: 'Build:dockerimage'
       #  uses: docker/build-push-action@v1
       #  with:
