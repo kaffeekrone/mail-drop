@@ -6,29 +6,28 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.Singular;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 
 @Builder
-public class MailWithAddressesDto {
+public class MailWithAddresses {
 
     @Setter
     @Getter
-    private MailDto mail;
+    private Mail mail;
     @Singular
     @Setter
     @Getter
-    private List<String> recipients;
+    private Set<String> recipients;
     @Getter
     @Setter
     private String from;
     @Singular("cc")
     @Setter
     @Getter
-    private List<String> cc;
+    private Set<String> cc;
     @Singular("bcc")
     @Setter
     @Getter
-    private List<String> bcc;
+    private Set<String> bcc;
 
 }

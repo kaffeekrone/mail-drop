@@ -1,7 +1,7 @@
 package de.kaffeekrone.maildrop.conf;
 
 import de.kaffeekrone.maildrop.MailDropConfiguration;
-import de.kaffeekrone.maildrop.Receiver;
+import de.kaffeekrone.maildrop.MailConsumer;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.DirectExchange;
@@ -70,11 +70,11 @@ public class RabbitMQConfiguration {
 
     @Bean
     SimpleMessageListenerContainer container(MailDropConfiguration mailDropConfiguration, ConnectionFactory connectionFactory,
-                                             Receiver receiver) {
+                                             MailConsumer mailConsumer) {
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
         container.setQueueNames(mailDropConfiguration.getQueue());
-        container.setMessageListener(receiver);
+        container.setMessageListener(mailConsumer);
         return container;
     }
 }

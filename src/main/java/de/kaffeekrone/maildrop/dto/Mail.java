@@ -8,7 +8,7 @@ import lombok.Singular;
 import java.util.List;
 
 @Builder
-public class MailDto {
+public class Mail {
 
     @Setter
     @Getter
@@ -22,7 +22,7 @@ public class MailDto {
     @Singular
     @Setter
     @Getter
-    private List<MailAttachmentDto> mailAttachments;
+    private List<Attachment> attachments;
 
 
 }

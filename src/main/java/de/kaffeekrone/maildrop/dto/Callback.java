@@ -5,7 +5,7 @@ import lombok.Setter;
 
 import java.time.ZonedDateTime;
 
-public class CallbackDto {
+public class Callback {
     @Getter
     @Setter
     private boolean success;

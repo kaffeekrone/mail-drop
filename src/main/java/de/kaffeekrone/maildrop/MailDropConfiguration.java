@@ -57,5 +57,9 @@ public class MailDropConfiguration {
     @Value("${retryDelay:5}")
     private int retryDelay;
 
+    @Getter
+    @Value("${defaultFromAddress:root@localhost}")
+    private String defaultFromAddress;
+
 
 }
