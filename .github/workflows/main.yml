@@ -20,9 +20,10 @@ jobs:
       - name: "Extract git ref"
         id: extract_branch
         shell: bash
-        run: echo "branch_name=$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_ENV
+        #run: echo "git_ref_name=$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_ENV
+        run: echo "git_ref_name=$(echo ${GITHUB_REF##*/})" >> $GITHUB_ENV
       #- name: Get branch name
-      #  run: echo "${{ env.branch_name }}"
+      #  run: echo "${{ env.git_ref_name }}"
       - name: 'Build:dockerimage'
         uses: docker/build-push-action@v1
         with:
@@ -30,4 +31,4 @@ jobs:
           username: "Loki-Afro"
           password: ${{ secrets.GH_REGISTRY_SECRET }}
           repository: kaffeekrone/mail-drop
-          tags: ${{ env.branch_name }}
+          tags: ${{ env.git_ref_name }}
