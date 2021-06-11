@@ -9,6 +9,7 @@ on:
   workflow_dispatch:
   create:
     tags:
+      - '*'
 
 jobs:
   build:
