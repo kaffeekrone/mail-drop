@@ -20,9 +20,10 @@ jobs:
         id: extract_branch
         shell: bash
         # run: echo "::set-env name=BRANCH_NAME::$(echo ${GITHUB_REF#refs/heads/})"
-        run: echo "BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/})"
+        run: echo "BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/}) >> $GITHUB_ENV"
       - name: Get branch name
-        run: echo 'The branch name is' $BRANCH_NAME
+        #run: echo 'The branch name is' $BRANCH_NAME
+        run: echo 'The branch name is' "${{ env.BRANCH_NAME }}"
       #- name: 'Build:dockerimage'
       #  uses: docker/build-push-action@v1
       #  with:
