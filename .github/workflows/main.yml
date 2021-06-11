@@ -1,0 +1,32 @@
+
+name: Push docker image
+
+on:
+  push:
+    branches: [ main ]
+    tags:
+      - '*'
+  workflow_dispatch:
+  create:
+    tags:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Build:checkout"
+        uses: actions/checkout@v2
+      - name: "Extract git ref"
+        id: extract_branch
+        shell: bash
+        run: echo "::set-env name=BRANCH_NAME::$(echo ${GITHUB_REF#refs/heads/})"
+      - name: Get branch name
+        run: echo 'The branch name is' $BRANCH_NAME
+      - name: 'Build:dockerimage'
+        uses: docker/build-push-action@v1
+        with:
+          registry: ghcr.io
+          username: "Loki-Afro"
+          password: ${{ secrets.GH_REGISTRY_SECRET }}
+          repository: kaffeekrone/mail-drop
+          tags: main
