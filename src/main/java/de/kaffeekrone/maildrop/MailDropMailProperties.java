@@ -19,19 +19,19 @@ public class MailDropMailProperties {
             out.putAll(originalProperties.getProperties());
         }
 
-        putIfAbsent(out, EmailConstants.MAIL_HOST, originalProperties.getHost());
-        putIfAbsent(out, EmailConstants.MAIL_PORT, originalProperties.getPort());
-        putIfAbsent(out, EmailConstants.MAIL_SMTP_USER, originalProperties.getUsername());
-        putIfAbsent(out, EmailConstants.MAIL_SMTP_PASSWORD, originalProperties.getPassword());
+        putIfNonNull(out, EmailConstants.MAIL_HOST, originalProperties.getHost());
+        putIfNonNull(out, EmailConstants.MAIL_PORT, originalProperties.getPort());
+        putIfNonNull(out, EmailConstants.MAIL_SMTP_USER, originalProperties.getUsername());
+        putIfNonNull(out, EmailConstants.MAIL_SMTP_PASSWORD, originalProperties.getPassword());
 
-        putIfAbsent(out, EmailConstants.MAIL_TRANSPORT_PROTOCOL, originalProperties.getProtocol());
+        putIfNonNull(out, EmailConstants.MAIL_TRANSPORT_PROTOCOL, originalProperties.getProtocol());
 
         return out;
     }
 
-    private void putIfAbsent(Properties properties, String constant, Object value) {
+    private void putIfNonNull(Properties properties, String constant, Object value) {
         if (value != null) {
-            properties.putIfAbsent(constant, value);
+            properties.put(constant, value);
         }
     }
 
