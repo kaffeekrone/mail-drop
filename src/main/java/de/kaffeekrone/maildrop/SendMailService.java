@@ -14,6 +14,7 @@ import javax.mail.Session;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import java.nio.charset.StandardCharsets;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -58,11 +59,16 @@ public class SendMailService {
 
     static String toAsteriskMail(String mailAddress) {
         try {
-            String address = new InternetAddress(mailAddress).getAddress();
-            String[] parts = address.split("@");
-            return parts[0].replaceAll("^(.)(.*)?(.)$", "$1*****$3")
-                    + "@"
-                    + parts[1].replaceAll("^(.)(.*)?(.)(\\..+)$", "$1*****$3$4");
+            InternetAddress internetAddress = new InternetAddress(mailAddress);
+            String address = internetAddress.getAddress();
+            if (address.contains("@")) {
+                String[] parts = address.split("@");
+                return parts[0].replaceAll("^(.)(.*)?(.)$", "$1*****$3")
+                        + "@"
+                        + parts[1].replaceAll("^(.)(.*)?(.)(\\..+)$", "$1*****$3$4");
+            } else {
+                return "";
+            }
         } catch (AddressException e) {
             throw new SendMailException("invalid mail address: " + mailAddress, e);
         }
@@ -81,9 +87,10 @@ public class SendMailService {
         Set<String> recipients = mailWithAddresses.getRecipients();
         Set<String> cc = mailWithAddresses.getCc();
         Set<String> bcc = mailWithAddresses.getBcc();
+        Set<String> replyTo = mailWithAddresses.getReplyTo();
 
         if (logger.isInfoEnabled()) {
-            logger.info("Trying to send Mail with subject {} to: {} cc: {} bcc: {}", mail.getSubject(),
+            logger.info("Trying to send Mail with subject {} and id {} to: {} cc: {} bcc: {}", mail.getSubject(), mailWithAddresses.getId(),
                     toAsteriskMail(recipients), toAsteriskMail(cc), toAsteriskMail(bcc));
         }
 
@@ -100,17 +107,35 @@ public class SendMailService {
                 email.addBcc(bcc.toArray(new String[0]));
             }
 
+            if (!CollectionUtils.isEmpty(bcc)) {
+                email.addBcc(bcc.toArray(new String[0]));
+            }
+
+            if (!CollectionUtils.isEmpty(replyTo)) {
+                Set<InternetAddress> set = new HashSet<>();
+                for (String s : replyTo) {
+                    InternetAddress e = new InternetAddress(s);
+                    e.validate();
+                    set.add(e);
+                }
+                email.setReplyTo(set);
+            }
+
+            if (!CollectionUtils.isEmpty(mailWithAddresses.getCustomHeaders())) {
+                email.setHeaders(mailWithAddresses.getCustomHeaders());
+            }
+
             // this is quite implicit but since we know that we received the data via JSON it is always UTF-8 ..
             email.setCharset(StandardCharsets.UTF_8.name());
 
             email.setMailSession(getSession());
             messageId = email.send();
-        } catch (EmailException e) {
+        } catch (EmailException | AddressException e) {
             throw new SendMailException("Issue while sending mail!", e);
         }
         if (logger.isInfoEnabled()) {
-            logger.info("Send Mail with subject {} successfully to: {} cc: {} bcc: {} with messageId {}", mail.getSubject(),
-                    toAsteriskMail(recipients), toAsteriskMail(cc), toAsteriskMail(bcc), messageId);
+            logger.info("Send Mail with subject {} and id {} successfully to: {} cc: {} bcc: {} with messageId {}", mail.getSubject(),
+                    mailWithAddresses.getId(), toAsteriskMail(recipients), toAsteriskMail(cc), toAsteriskMail(bcc), messageId);
         }
     }
 

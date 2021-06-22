@@ -41,25 +41,27 @@ public class MailConsumer implements ChannelAwareMessageListener {
         String messageStr = new String(message.getBody(), StandardCharsets.UTF_8);
         logger.debug("Received '{}'", messageStr);
 
+        String mailId = null;
         try {
             MailWithAddresses mailWithAddresses = gson.fromJson(messageStr, MailWithAddresses.class);
+            mailId = mailWithAddresses.getId();
 
             sendMailService.send(mailWithAddresses);
 
-            notifyCallback(message, true);
+            notifyCallback(message, mailId, true);
 
         } catch (Exception e) {
             logger.error("Unable to handle message" + messageStr, e);
-            pushToRetryQueue(message);
+            pushToRetryQueue(message, mailId);
         }
     }
 
-    private void pushToRetryQueue(Message originalMessage) {
+    private void pushToRetryQueue(Message originalMessage, String mailId) {
         try {
             MessageProperties properties = originalMessage.getMessageProperties();
             int requeueCount = (int) properties.getHeaders().getOrDefault("requeueCount", 0);
             if (requeueCount + 1 >= mailDropConfiguration.getRetryAttempts()) {
-                notifyCallback(originalMessage, false);
+                notifyCallback(originalMessage, mailId, false);
             } else {
                 HashMap<String, Object> headers = new HashMap<>(properties.getHeaders());
                 headers.put("requeueCount", ++requeueCount);
@@ -82,7 +84,11 @@ public class MailConsumer implements ChannelAwareMessageListener {
     }
 
 
-    private void notifyCallback(Message originalMessage, boolean success) throws IOException {
+    private void notifyCallback(Message originalMessage, String mailId, boolean success) throws IOException {
+        if (mailDropConfiguration.isEnableCallback()) {
+            logger.debug("skipped notifying callback queue, is is disabled");
+            return;
+        }
         MessageProperties messageProperties = new MessageProperties();
         messageProperties.setContentType("application/json");
         messageProperties.setContentEncoding(StandardCharsets.UTF_8.name());
@@ -94,6 +100,7 @@ public class MailConsumer implements ChannelAwareMessageListener {
 
         Callback callback = new Callback();
         callback.setSuccess(success);
+        callback.setId(mailId);
         if (success) {
             callback.setSentDate(ZonedDateTime.now());
         }

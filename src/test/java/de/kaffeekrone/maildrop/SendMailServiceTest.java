@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.imageio.ImageIO;
+import javax.mail.Address;
 import javax.mail.BodyPart;
 import javax.mail.MessagingException;
 import javax.mail.Part;
@@ -24,6 +25,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.Base64;
+import java.util.Map;
+import java.util.Set;
 
 import static de.kaffeekrone.maildrop.SendMailService.toAsteriskMail;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -261,6 +264,48 @@ class SendMailServiceTest {
 
         BodyPart additionalImageBodyPart = mimeMultipartMixed.getBodyPart(1);
         assertImageBodyPart(additionalAttachmentFileName, additionalImage, additionalImageBodyPart, Attachment.ContentDisposition.ATTACHMENT);
+    }
+
+    @Test
+    public void testCustomHeaders() throws MessagingException {
+        MailWithAddresses mail = MailWithAddresses.builder()
+                .from(DEFAULT_FROM_ADDRESS)
+                .recipient(DEFAULT_RECIPIENT)
+                .mail(Mail.builder()
+                        .subject(DEFAULT_SUBJECT)
+                        .plainTextContent(DEFAULT_PLAIN_TEXT_CONTENT)
+                        .build())
+                .customHeaders(Map.of("custom1", "666", "custom2", "huhu"))
+                .build();
+
+
+        mailService.send(mail);
+
+        MimeMessage message = getReceivedMessage();
+
+        assertThat(message.getHeader("custom1")).containsOnly("666");
+        assertThat(message.getHeader("custom2")).containsOnly("huhu");
+    }
+
+    @Test
+    public void testReplyTo() throws MessagingException {
+        MailWithAddresses mail = MailWithAddresses.builder()
+                .from(DEFAULT_FROM_ADDRESS)
+                .recipient(DEFAULT_RECIPIENT)
+                .mail(Mail.builder()
+                        .subject(DEFAULT_SUBJECT)
+                        .plainTextContent(DEFAULT_PLAIN_TEXT_CONTENT)
+                        .build())
+                .replyTo(Set.of("huhu@blabla.de", "gurke@fahrer.de"))
+                .build();
+
+
+        mailService.send(mail);
+
+        MimeMessage message = getReceivedMessage();
+        assertThat(message.getReplyTo())
+                .extracting(Address::toString)
+                .containsExactlyInAnyOrder("huhu@blabla.de", "gurke@fahrer.de");
     }
 
     private MimeMessage getReceivedMessage() {

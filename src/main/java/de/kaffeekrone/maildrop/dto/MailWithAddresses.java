@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.Singular;
 
+import java.util.Map;
 import java.util.Set;
 
 @Builder
@@ -30,4 +31,15 @@ public class MailWithAddresses {
     @Getter
     private Set<String> bcc;
 
+    @Getter
+    @Setter
+    private Set<String> replyTo;
+
+    @Getter
+    @Setter
+    private Map<String, String> customHeaders;
+
+    @Getter
+    @Setter
+    private String id;
 }

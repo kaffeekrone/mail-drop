@@ -13,4 +13,8 @@ public class Callback {
     @Setter
     private ZonedDateTime sentDate;
 
+    @Getter
+    @Setter
+    private String id;
+
 }

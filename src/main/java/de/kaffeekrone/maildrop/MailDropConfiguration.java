@@ -6,31 +6,31 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 @Component
-@ConfigurationProperties(prefix="maildrop")
+@ConfigurationProperties(prefix = "maildrop")
 public class MailDropConfiguration {
 
-    
+
     @Getter
     @Value("${exchange:mail-drop}")
     private String exchange;
-    
+
     @Getter
     @Value("${routingKey:mail-drop}")
-    private String routingKey; 
-    
+    private String routingKey;
+
     @Getter
     @Value("${queue:mail-drop}")
     private String queue;
-    
-    
+
+
     @Getter
     @Value("${retryExchange:retry-mail-drop}")
     private String retryExchange;
 
     @Getter
     @Value("${retryRoutingKey:retry-mail-drop}")
-    private String retryRoutingKey;  
-    
+    private String retryRoutingKey;
+
     @Getter
     @Value("${retryQueue:retry-mail-drop}")
     private String retryQueue;
@@ -60,6 +60,10 @@ public class MailDropConfiguration {
     @Getter
     @Value("${defaultFromAddress:root@localhost}")
     private String defaultFromAddress;
+
+    @Getter
+    @Value("${enableCallback:true}")
+    private boolean enableCallback;
 
 
 }
