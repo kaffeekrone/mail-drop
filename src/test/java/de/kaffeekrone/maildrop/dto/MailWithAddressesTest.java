@@ -39,9 +39,10 @@ class MailWithAddressesTest {
                     Attachment::getContentId,
                     Attachment::getMimeType
             ).containsExactlyInAnyOrder(
-                    tuple("imageFileName", null, Attachment.ContentDisposition.INLINE, "fancyCid", "image/png"),
-                    tuple("additionalAttachmentFileName", null, Attachment.ContentDisposition.ATTACHMENT, null, "image/png"));
+                    tuple("imageFileName.png", null, Attachment.ContentDisposition.INLINE, "fancyCid", "image/png"),
+                    tuple("additionalAttachmentFileName.png", null, Attachment.ContentDisposition.ATTACHMENT, null, "image/png"));
 
+            assertThat(mailWithAddresses.getReplyTo()).isEmpty();
 
         }
     }
