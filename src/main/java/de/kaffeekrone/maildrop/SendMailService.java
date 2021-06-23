@@ -54,7 +54,13 @@ public class SendMailService {
     }
 
     private String toAsteriskMail(Set<String> mailAddresses) {
-        return mailAddresses.stream().map(SendMailService::toAsteriskMail).collect(Collectors.joining());
+        if (!CollectionUtils.isEmpty(mailAddresses)) {
+            return mailAddresses.stream()
+                    .map(SendMailService::toAsteriskMail)
+                    .collect(Collectors.joining());
+        } else {
+            return "";
+        }
     }
 
     static String toAsteriskMail(String mailAddress) {

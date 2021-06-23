@@ -24,7 +24,8 @@ class MailWithAddressesTest {
             assertThat(mailWithAddresses.getFrom()).isEqualTo("defaultfromaddress@fancydomain.de");
             assertThat(mailWithAddresses.getRecipients()).containsExactlyInAnyOrder("fun@bla.de");
             assertThat(mailWithAddresses.getCc()).isEmpty();
-            assertThat(mailWithAddresses.getBcc()).isEmpty();
+            assertThat(mailWithAddresses.getBcc()).isNull();
+            assertThat(mailWithAddresses.getReplyTo()).isEmpty();
 
             Mail mail = mailWithAddresses.getMail();
 
@@ -42,7 +43,6 @@ class MailWithAddressesTest {
                     tuple("imageFileName.png", null, Attachment.ContentDisposition.INLINE, "fancyCid", "image/png"),
                     tuple("additionalAttachmentFileName.png", null, Attachment.ContentDisposition.ATTACHMENT, null, "image/png"));
 
-            assertThat(mailWithAddresses.getReplyTo()).isEmpty();
 
         }
     }
