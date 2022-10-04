@@ -20,8 +20,13 @@ jobs:
   trivy-verify:
     runs-on: ubuntu-latest
     steps:
-    - name: Build an image from Dockerfile
-      run: docker build -t docker.io/${{ github.repository_owner }}/mail-drop:${{ github.sha }} .
+    #- name: Build an image from Dockerfile
+    #  run: docker build -t docker.io/${{ github.repository_owner }}/mail-drop:${{ github.sha }} .
+    - name: Build image
+      uses: docker/build-push-action@v3
+      with:
+        push: false
+        tags: ${{ github.repository_owner }}/mail-drop:${{ github.sha }}
     - name: Run Trivy vulnerability scanner
       uses: aquasecurity/trivy-action@0.7.1
       with:
