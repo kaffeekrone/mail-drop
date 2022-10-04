@@ -21,11 +21,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Build an image from Dockerfile
-      run: docker build -t docker.io/my-organization/my-app:${{ github.sha }} .
+      run: docker build -t docker.io/${{ github.repository_owner }}/mail-drop:${{ github.sha }} .
     - name: Run Trivy vulnerability scanner
       uses: aquasecurity/trivy-action@0.7.1
       with:
-        image-ref: 'ghcr.io/${{ github.repository_owner }}/${{ inputs.image_name }}@${{ steps.docker_build_push.outputs.digest }}'
+        image-ref: 'ghcr.io/${{ github.repository_owner }}/mail-drop@${{ github.sha }}'
         format: 'sarif'
         output: 'trivy-results.sarif'
         severity: 'CRITICAL,HIGH'
