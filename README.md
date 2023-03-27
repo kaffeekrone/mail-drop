@@ -85,16 +85,21 @@ mvn clean install
 <dependency>
     <groupId>de.kaffeekrone</groupId>
     <artifactId>mail-drop</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>XXX</version>
 </dependency>
 ```
 
 ### Docker
 
+be aware that docker commands are always environment dependent, especially networking, so take this as a rough example
 ```
-docker run -d -p 5672:5672 -p 15672:15672 --name rabbitmq rabbitmq:3.8.9-management
-docker run -d --name mailcatcher -p 1080:1080 -p 1025:1025 schickling/mailcatcher
+# setup rabbitmq & mailcatcher as the receiving end
+docker run -d -p 5672:5672 -p 15672:15672 --name rabbitmq docker.io/rabbitmq:3.8.9-management
+docker run -d --name mailcatcher -p 1080:1080 -p 1025:1025 docker.io/schickling/mailcatcher
 RABBITMQ_IP=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' rabbitmq)
 SMTP_HOST=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' mailcatcher)
+# start mail-drop
 docker run --rm -e SPRING_MAIL_HOST=$SMTP_HOST -e SPRING_RABBITMQ_HOST=$RABBITMQ_IP ghcr.io/kaffeekrone/mail-drop:main
+# send test mail
+docker exec rabbitmq rabbitmqadmin publish exchange='mail-drop' routing_key='mail-drop' payload='{"mail":{"subject":"huhu","plainTextContent":"content🙉"},"recipients":["fun@bla.de"],"from":"defaultfromaddress@fancydomain.de"}'
 ```
