@@ -16,13 +16,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "Build:checkout"
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: "Extract git ref"
         id: extract_ref
         shell: bash
         run: echo "git_ref_name=$(echo ${GITHUB_REF##*/})" >> $GITHUB_ENV
       - name: 'Build:dockerimage'
-        uses: docker/build-push-action@v1
+        uses: docker/build-push-action@v5
         with:
           registry: ghcr.io
           username: "Loki-Afro"
