@@ -14,6 +14,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      packages: write
     steps:
       - name: "Build:checkout"
         uses: actions/checkout@v4
@@ -21,11 +25,15 @@ jobs:
         id: extract_ref
         shell: bash
         run: echo "git_ref_name=$(echo ${GITHUB_REF##*/})" >> $GITHUB_ENV
+      - name: Log into registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - name: 'Build:dockerimage'
         uses: docker/build-push-action@v5
         with:
-          registry: ghcr.io
-          username: "Loki-Afro"
-          password: ${{ secrets.GH_REGISTRY_SECRET }}
-          repository: kaffeekrone/mail-drop
-          tags: ${{ env.git_ref_name }}
+          platforms: linux/amd64
+          push: true
+          tags: ghcr.io/${{ github.repository }}:${{ env.git_ref_name }}
