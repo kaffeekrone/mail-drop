@@ -68,7 +68,7 @@ public class RabbitMQConfiguration {
         return BindingBuilder.bind(queue).to(directExchange).with(mailDropConfiguration.getCallbackRoutingKey());
     }
 
-    @Bean
+    @Bean("mailConsumerContainer")
     SimpleMessageListenerContainer container(MailDropConfiguration mailDropConfiguration, ConnectionFactory connectionFactory,
                                              MailConsumer mailConsumer) {
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
