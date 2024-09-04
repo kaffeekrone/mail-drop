@@ -1,11 +1,11 @@
-FROM docker.io/maven:3.8.1-jdk-11
+FROM docker.io/maven:3.9.9-eclipse-temurin-22
 WORKDIR /app
 COPY pom.xml /app/pom.xml
 RUN mvn dependency:go-offline
 COPY src /app/src
 RUN mvn clean package
 
-FROM docker.io/adoptopenjdk/openjdk11:alpine-jre
+FROM docker.io/eclipse-temurin:22-jre
 WORKDIR /app
 COPY --from=0 /app/target/*.jar /app/mail-drop.jar
 

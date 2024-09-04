@@ -2,12 +2,12 @@
 package de.kaffeekrone.maildrop.dto;
 
 
+import jakarta.activation.DataSource;
+import jakarta.mail.util.ByteArrayDataSource;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.activation.DataSource;
-import javax.mail.util.ByteArrayDataSource;
 import java.util.Base64;
 import java.util.Locale;
 
