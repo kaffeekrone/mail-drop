@@ -51,7 +51,7 @@ public class MailConsumer implements ChannelAwareMessageListener {
             notifyCallback(message, mailId, true);
 
         } catch (Exception e) {
-            logger.error("Unable to handle message" + messageStr, e);
+            logger.error("Unable to handle message {}", messageStr, e);
             pushToRetryQueue(message, mailId);
         }
     }

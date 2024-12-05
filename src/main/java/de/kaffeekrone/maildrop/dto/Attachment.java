@@ -11,6 +11,8 @@ import lombok.Setter;
 import java.util.Base64;
 import java.util.Locale;
 
+@Setter
+@Getter
 @Builder
 public class Attachment {
 
@@ -22,28 +24,16 @@ public class Attachment {
         }
     }
 
-    @Setter
-    @Getter
     private String name;
 
-    @Setter
-    @Getter
     private String description;
 
-    @Setter
-    @Getter
     private ContentDisposition contentDisposition;
 
-    @Setter
-    @Getter
     private String contentId;
 
-    @Getter
-    @Setter
     private String base64Content;
 
-    @Getter
-    @Setter
     private String mimeType;
 
     public boolean isInline() {

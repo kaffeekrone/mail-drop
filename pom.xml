@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.3.4</version>
+        <version>3.4.0</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>de.kaffeekrone</groupId>
@@ -13,7 +13,9 @@
     <version>2.1-SNAPSHOT</version>
     <name>mail-drop</name>
     <properties>
-        <java.version>22</java.version>
+        <java.version>23</java.version>
+<!--        enable annotation processing for lombok, by default turned off since java 23 -->
+        <maven.compiler.proc>full</maven.compiler.proc>
     </properties>
     <dependencies>
         <dependency>
@@ -39,7 +41,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.34</version>
+            <version>1.18.36</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -63,7 +65,7 @@
             <groupId>com.icegreen</groupId>
             <artifactId>greenmail-junit5</artifactId>
             <!-- rc version is required for jakarta mail-->
-            <version>2.1.0</version>
+            <version>2.1.2</version>
             <scope>test</scope>
         </dependency>
 

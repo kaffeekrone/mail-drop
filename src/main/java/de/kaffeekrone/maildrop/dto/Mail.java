@@ -7,21 +7,15 @@ import lombok.Singular;
 
 import java.util.List;
 
+@Setter
+@Getter
 @Builder
 public class Mail {
 
-    @Setter
-    @Getter
     private String htmlContent;
-    @Setter
-    @Getter
     private String plainTextContent;
-    @Setter
-    @Getter
     private String subject;
     @Singular
-    @Setter
-    @Getter
     private List<Attachment> attachments;
 
 
