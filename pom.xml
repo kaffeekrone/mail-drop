@@ -13,7 +13,7 @@
     <version>2.2-SNAPSHOT</version>
     <name>mail-drop</name>
     <properties>
-        <java.version>23</java.version>
+        <java.version>24</java.version>
 <!--        enable annotation processing for lombok, by default turned off since java 23 -->
         <maven.compiler.proc>full</maven.compiler.proc>
     </properties>
@@ -41,13 +41,13 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.36</version>
+            <version>1.18.38</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>2.12.1</version>
+            <version>2.13.1</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
