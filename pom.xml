@@ -5,15 +5,15 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.5</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <version>3.5.6</version>
+        <relativePath/>
     </parent>
     <groupId>de.kaffeekrone</groupId>
     <artifactId>mail-drop</artifactId>
     <version>2.4-SNAPSHOT</version>
     <name>mail-drop</name>
     <properties>
-        <java.version>24</java.version>
+        <java.version>25</java.version>
 <!--        enable annotation processing for lombok, by default turned off since java 23 -->
         <maven.compiler.proc>full</maven.compiler.proc>
     </properties>
@@ -41,13 +41,13 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.40</version>
+            <version>1.18.42</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>2.13.1</version>
+            <version>2.13.2</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -58,14 +58,13 @@
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
-            <version>3.27.4</version>
+            <version>3.27.6</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.icegreen</groupId>
             <artifactId>greenmail-junit5</artifactId>
-            <!-- rc version is required for jakarta mail-->
-            <version>2.1.3</version>
+            <version>2.1.7</version>
             <scope>test</scope>
         </dependency>
 
