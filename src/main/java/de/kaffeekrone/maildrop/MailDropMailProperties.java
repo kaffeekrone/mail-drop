@@ -1,7 +1,7 @@
 package de.kaffeekrone.maildrop;
 
 import org.apache.commons.mail2.core.EmailConstants;
-import org.springframework.boot.autoconfigure.mail.MailProperties;
+import org.springframework.boot.mail.autoconfigure.MailProperties;
 
 import java.util.Properties;
 

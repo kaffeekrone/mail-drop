@@ -26,14 +26,13 @@ public class MailConsumer implements ChannelAwareMessageListener {
     private final MailDropConfiguration mailDropConfiguration;
     private final SendMailService sendMailService;
     private final RabbitTemplate rabbitTemplate;
-    private final Gson gson;
+    private static final Gson gson = new Gson();
 
     @Autowired
-    public MailConsumer(MailDropConfiguration mailDropConfiguration, SendMailService sendMailService, RabbitTemplate rabbitTemplate, Gson gson) {
+    public MailConsumer(MailDropConfiguration mailDropConfiguration, SendMailService sendMailService, RabbitTemplate rabbitTemplate) {
         this.mailDropConfiguration = mailDropConfiguration;
         this.sendMailService = sendMailService;
         this.rabbitTemplate = rabbitTemplate;
-        this.gson = gson;
     }
 
     @Override

@@ -3,7 +3,7 @@ package de.kaffeekrone.maildrop.conf;
 import de.kaffeekrone.maildrop.MailDropConfiguration;
 import de.kaffeekrone.maildrop.MailDropMailProperties;
 import de.kaffeekrone.maildrop.SendMailService;
-import org.springframework.boot.autoconfigure.mail.MailProperties;
+import org.springframework.boot.mail.autoconfigure.MailProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
