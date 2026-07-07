@@ -22,3 +22,4 @@ echo "Bumping to next dev version ${NEXT_DEV_VERSION}..."
 mvn versions:set -DnewVersion="${NEXT_DEV_VERSION}" -DgenerateBackupPoms=false
 git add .
 git commit -m "iterating to next dev version ${NEXT_DEV_VERSION}"
+git push origin main
