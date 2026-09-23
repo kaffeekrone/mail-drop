@@ -58,12 +58,19 @@ public class MailConsumer implements ChannelAwareMessageListener {
     private void pushToRetryQueue(Message originalMessage, String mailId) {
         try {
             MessageProperties properties = originalMessage.getMessageProperties();
-            int requeueCount = (int) properties.getHeaders().getOrDefault("requeueCount", 0);
-            if (requeueCount + 1 >= mailDropConfiguration.getRetryAttempts()) {
+            Object requeueCountHeader = properties.getHeaders().getOrDefault("requeueCount", 0);
+            if (!(requeueCountHeader instanceof Integer requeueCount) || requeueCount < 0) {
+                logger.warn("Discarding invalid requeueCount header: {}", requeueCountHeader);
+                notifyCallback(originalMessage, mailId, false);
+                return;
+            }
+
+            long nextRequeueCount = (long) requeueCount + 1;
+            if (nextRequeueCount >= mailDropConfiguration.getRetryAttempts()) {
                 notifyCallback(originalMessage, mailId, false);
             } else {
                 HashMap<String, Object> headers = new HashMap<>(properties.getHeaders());
-                headers.put("requeueCount", ++requeueCount);
+                headers.put("requeueCount", (int) nextRequeueCount);
 
                 MessageProperties messageProperties = new MessageProperties();
                 messageProperties.setContentType("application/json");

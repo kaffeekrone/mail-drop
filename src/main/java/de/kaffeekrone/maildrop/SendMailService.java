@@ -104,7 +104,6 @@ public class SendMailService {
                     toAsteriskMail(recipients), toAsteriskMail(cc), toAsteriskMail(bcc));
         }
 
-        final String messageId;
         try {
             final Email email = createMail(mail);
 
@@ -139,13 +138,12 @@ public class SendMailService {
             email.setCharset(StandardCharsets.UTF_8.name());
 
             email.setMailSession(getSession());
-            messageId = email.send();
+            email.send();
         } catch (EmailException | AddressException e) {
             throw new SendMailException("Issue while sending mail!", e);
         }
         if (logger.isInfoEnabled()) {
-            logger.info("Send Mail with subject {} and id {} successfully to: {} cc: {} bcc: {} with messageId {}", mail.getSubject(),
-                    mailWithAddresses.getId(), toAsteriskMail(recipients), toAsteriskMail(cc), toAsteriskMail(bcc), messageId);
+            logger.info("Mail sent successfully");
         }
     }
 
@@ -204,7 +202,7 @@ public class SendMailService {
     private void attachAttachmentsToMultiPartMail(Mail mail, MultiPartEmail multiPartMail) throws EmailException {
         for (Attachment mailAttachment : mail.getAttachments()) {
             if (mailAttachment.isInline()) {
-                logger.warn("Plain Text and and inline attachment is not possible ignoring attachment {}", mailAttachment.getName());
+                logger.warn("Plain text and inline attachment combination is unsupported");
             }
             multiPartMail.attach(mailAttachment.asDatasource(),
                     mailAttachment.getName(), mailAttachment.getDescription(),
