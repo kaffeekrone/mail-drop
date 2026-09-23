@@ -77,6 +77,54 @@ Just build it with maven
 mvn clean install
 ```
 
+### Tests
+
+Java 25 is required. Run the existing tests without a container runtime:
+
+```sh
+mvn test
+```
+
+Run all tests, including the RabbitMQ integration tests, with:
+
+```sh
+mvn verify
+```
+
+`mvn verify` (and `mvn install`) requires a running Docker-compatible container
+runtime. Maven Failsafe runs `MailDeliveryIT` against a disposable RabbitMQ
+4.1.0 container and an in-process GreenMail SMTP server, both using dynamically
+allocated ports. The tests cover delivery, callbacks and correlation headers,
+TTL/dead-letter retries, and the attempt limit. The first run downloads the
+RabbitMQ image. An unavailable runtime fails the integration tests rather than
+silently skipping them.
+
+For rootless Podman on Linux:
+
+```sh
+systemctl --user start podman.socket
+mvn verify
+```
+
+Maven automatically activates the `rootless-podman` profile on Linux when
+`${XDG_RUNTIME_DIR}/podman/podman.sock` exists and `DOCKER_HOST` is not set.
+The profile supplies `DOCKER_HOST` and `TESTCONTAINERS_RYUK_DISABLED=true` only
+to the integration-test JVM. It does not start Podman itself. An explicit
+`DOCKER_HOST` takes precedence; to opt out of detection, use
+`mvn verify -P'!rootless-podman'`. When both runtimes are installed, the detected
+Podman socket is preferred unless you opt out or set `DOCKER_HOST`.
+IDE test runs that bypass Maven still need the environment variables configured
+in their run configuration.
+
+Disabling Ryuk follows
+the [Testcontainers rootless Podman guidance](https://java.testcontainers.org/supported_docker_environment/#podman).
+Spring stops the container on normal test shutdown; a forcibly terminated JVM
+may leave a container that needs manual cleanup with Podman.
+
+CI runs `mvn verify` on the runner for pull requests and before building/pushing
+the application image. The Dockerfile's `mvn package` runs the existing tests
+without needing access to a nested container runtime.
+
 ## Howto
 
 ### Maven

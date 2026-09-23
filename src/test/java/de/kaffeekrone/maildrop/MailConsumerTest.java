@@ -37,7 +37,7 @@ class MailConsumerTest {
         configuration.setRetryAttempts(5);
         configuration.setRetryExchange(RETRY_EXCHANGE);
         configuration.setRetryRoutingKey(RETRY_ROUTING_KEY);
-        configuration.setEnableCallback(true);
+        configuration.setEnableCallback(false);
 
         SendMailService sendMailService = mock(SendMailService.class);
         doThrow(new IllegalArgumentException("deterministic failure"))

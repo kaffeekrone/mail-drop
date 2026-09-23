@@ -3,6 +3,7 @@ package de.kaffeekrone.maildrop;
 import com.icegreen.greenmail.configuration.GreenMailConfiguration;
 import com.icegreen.greenmail.junit5.GreenMailExtension;
 import com.icegreen.greenmail.util.ServerSetupTest;
+import de.kaffeekrone.maildrop.conf.SendMailServiceConfiguration;
 import de.kaffeekrone.maildrop.dto.Attachment;
 import de.kaffeekrone.maildrop.dto.Mail;
 import de.kaffeekrone.maildrop.dto.MailWithAddresses;
@@ -17,7 +18,10 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.mail.autoconfigure.MailProperties;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -31,7 +35,9 @@ import java.util.Set;
 import static de.kaffeekrone.maildrop.SendMailService.toAsteriskMail;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
+@SpringBootTest(classes = SendMailServiceConfiguration.class)
+@EnableConfigurationProperties(MailProperties.class)
+@Import(MailDropConfiguration.class)
 class SendMailServiceTest {
 
     private static final String DEFAULT_FROM_ADDRESS = "defaultfromaddress@fancydomain.de";

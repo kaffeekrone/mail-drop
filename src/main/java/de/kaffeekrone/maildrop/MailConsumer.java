@@ -1,6 +1,9 @@
 package de.kaffeekrone.maildrop;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializer;
 import com.rabbitmq.client.Channel;
 import de.kaffeekrone.maildrop.dto.Callback;
 import de.kaffeekrone.maildrop.dto.MailWithAddresses;
@@ -26,7 +29,10 @@ public class MailConsumer implements ChannelAwareMessageListener {
     private final MailDropConfiguration mailDropConfiguration;
     private final SendMailService sendMailService;
     private final RabbitTemplate rabbitTemplate;
-    private static final Gson gson = new Gson();
+    private static final Gson gson = new GsonBuilder()
+            .registerTypeAdapter(ZonedDateTime.class,
+                    (JsonSerializer<ZonedDateTime>) (date, type, context) -> new JsonPrimitive(date.toString()))
+            .create();
 
     @Autowired
     public MailConsumer(MailDropConfiguration mailDropConfiguration, SendMailService sendMailService, RabbitTemplate rabbitTemplate) {
@@ -91,8 +97,8 @@ public class MailConsumer implements ChannelAwareMessageListener {
 
 
     private void notifyCallback(Message originalMessage, String mailId, boolean success) throws IOException {
-        if (mailDropConfiguration.isEnableCallback()) {
-            logger.debug("skipped notifying callback queue, is is disabled");
+        if (!mailDropConfiguration.isEnableCallback()) {
+            logger.debug("Skipped notifying callback queue, it is disabled");
             return;
         }
         MessageProperties messageProperties = new MessageProperties();

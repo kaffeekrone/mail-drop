@@ -12,7 +12,12 @@ on:
       - '*'
 
 jobs:
+  test:
+    uses: ./.github/workflows/test.yml
+    permissions:
+      contents: read
   build:
+    needs: test
     runs-on: ubuntu-latest
     permissions:
       actions: read
