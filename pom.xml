@@ -20,6 +20,16 @@
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-testcontainers</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>testcontainers-rabbitmq</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
         </dependency>
         <dependency>
@@ -89,10 +99,52 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </build>
 
+    <profiles>
+        <profile>
+            <id>rootless-podman</id>
+            <activation>
+                <os>
+                    <name>Linux</name>
+                </os>
+                <property>
+                    <name>!env.DOCKER_HOST</name>
+                </property>
+                <file>
+                    <exists>${env.XDG_RUNTIME_DIR}/podman/podman.sock</exists>
+                </file>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <configuration>
+                            <environmentVariables>
+                                <DOCKER_HOST>unix://${env.XDG_RUNTIME_DIR}/podman/podman.sock</DOCKER_HOST>
+                                <TESTCONTAINERS_RYUK_DISABLED>true</TESTCONTAINERS_RYUK_DISABLED>
+                            </environmentVariables>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
